@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cristiano Ganpat Messi</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,700;0,900;1,300;1,700;1,900&family=Barlow:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --neon: #D2FF00;
+  --neon-dim: rgba(210,255,0,0.12);
+  --dark: #0e0e0f;
+  --darker: #080809;
+  --mid: #181819;
+  --card: #1a1a1c;
+  --border: #252527;
+  --muted: #4a4a4d;
+  --grey: #888;
+  --light: #d8d8da;
+  --white: #ffffff;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--dark);
+  color: var(--light);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ─── CURSOR ─── */
+#cur { position:fixed; width:10px; height:10px; background:var(--neon); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:difference; transition:width .15s,height .15s; }
+#cur-r { position:fixed; width:38px; height:38px; border:1px solid var(--neon); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:all .2s ease; opacity:.45; }
+#blob { position:fixed; width:600px; height:600px; background:radial-gradient(circle,rgba(210,255,0,.08) 0%,transparent 70%); border-radius:50%; pointer-events:none; z-index:0; transform:translate(-50%,-50%); transition:left .8s ease,top .8s ease; filter:blur(50px); }
+
+/* ─── NAV ─── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:22px 60px;
+  background:linear-gradient(to bottom,rgba(8,8,9,.97) 0%,transparent 100%);
+  backdrop-filter:blur(0px);
+}
+.nav-logo { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-style:italic; font-size:26px; letter-spacing:3px; color:var(--neon); text-transform:uppercase; }
+.nav-links { display:flex; gap:36px; list-style:none; }
+.nav-links a { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color .2s; }
+.nav-links a:hover { color:var(--neon); }
+
+/* ─── HERO ─── */
+.hero {
+  position:relative; min-height:100vh;
+  display:grid; grid-template-columns:1fr 1fr;
+  overflow:hidden;
+}
+.hero-left {
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding:0 60px 80px; position:relative; z-index:2;
+}
+.hero-right { position:relative; overflow:hidden; }
+.hero-right img {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:top center;
+  filter:saturate(.8) contrast(1.05);
+  transition:transform 8s ease;
+}
+.hero-right::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(to right,var(--dark) 0%,transparent 40%),
+             linear-gradient(to top,var(--dark) 0%,transparent 30%);
+  z-index:1;
+}
+.hero-right:hover img { transform:scale(1.04); }
+
+.hero-giant {
+  position:absolute; left:-20px; top:50%; transform:translateY(-52%);
+  font-family:'Barlow Condensed',sans-serif; font-size:42vw; font-weight:900; font-style:italic;
+  color:transparent; -webkit-text-stroke:1px rgba(210,255,0,.04);
+  line-height:1; pointer-events:none; user-select:none; z-index:0;
+}
+
+.hero-tag { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--neon); margin-bottom:20px; opacity:0; animation:up .8s .3s ease forwards; }
+.hero-name { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-style:italic; font-size:clamp(64px,8vw,130px); line-height:.85; text-transform:uppercase; letter-spacing:-2px; color:var(--white); opacity:0; animation:up .8s .5s ease forwards; }
+.hero-name .y { color:var(--neon); display:block; }
+.hero-desc { margin-top:28px; font-size:16px; color:var(--muted); line-height:1.6; max-width:340px; opacity:0; animation:up .8s .65s ease forwards; }
+.hero-cta { margin-top:36px; display:flex; gap:16px; align-items:center; opacity:0; animation:up .8s .8s ease forwards; }
+.btn-neon {
+  font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  padding:14px 28px; background:var(--neon); color:var(--dark); text-decoration:none;
+  transition:all .25s; display:inline-block;
+}
+.btn-neon:hover { background:var(--dark); color:var(--neon); outline:1px solid var(--neon); }
+.btn-ghost {
+  font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  padding:14px 28px; border:1px solid var(--border); color:var(--muted); text-decoration:none;
+  transition:all .25s; display:inline-block;
+}
+.btn-ghost:hover { border-color:var(--neon); color:var(--neon); }
+
+.scroll-hint { position:absolute; bottom:36px; right:60px; display:flex; flex-direction:column; align-items:center; gap:10px; opacity:0; animation:fade .8s 1.4s ease forwards; }
+.scroll-hint span { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:4px; text-transform:uppercase; color:var(--muted); writing-mode:vertical-rl; }
+.s-line { width:1px; height:55px; background:linear-gradient(to bottom,var(--neon),transparent); animation:pulse 1.6s ease infinite; }
+
+/* ─── MARQUEE ─── */
+.marquee { background:var(--neon); padding:13px 0; overflow:hidden; white-space:nowrap; position:relative; z-index:3; }
+.m-inner { display:inline-block; animation:ticker 22s linear infinite; }
+.m-inner span { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-style:italic; font-size:16px; text-transform:uppercase; color:var(--dark); letter-spacing:2px; padding:0 26px; }
+.m-inner .dot { color:rgba(0,0,0,.2); padding:0 6px; }
+
+/* ─── SECTION SCAFFOLD ─── */
+section { padding:100px 60px; position:relative; z-index:2; }
+.sec-hd { display:flex; align-items:center; gap:18px; margin-bottom:64px; }
+.sec-n { font-family:'Space Mono',monospace; font-size:10px; color:var(--neon); letter-spacing:2px; }
+.sec-t { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-style:italic; font-size:clamp(34px,5vw,62px); text-transform:uppercase; color:var(--white); line-height:1; }
+.sec-l { flex:1; height:1px; background:var(--border); }
+
+/* ─── ABOUT SPLIT ─── */
+.about { background:var(--darker); border-top:1px solid var(--border); }
+.about-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:80px; align-items:center; }
+.about-copy { font-size:18px; line-height:1.85; color:#888; }
+.about-copy strong { color:var(--neon); font-weight:500; }
+.about-copy p+p { margin-top:20px; }
+.stats { display:grid; grid-template-columns:1fr 1fr; gap:2px; }
+.stat { background:var(--card); padding:30px 26px; transition:background .3s; }
+.stat:hover { background:#222224; }
+.stat-n { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-style:italic; font-size:54px; color:var(--neon); line-height:1; margin-bottom:6px; }
+.stat-l { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); }
+
+/* ─── PHOTO STRIP ─── */
+.photo-strip {
+  padding:0; display:grid; grid-template-columns:1.4fr 1fr 1fr;
+  height:520px; gap:2px;
+}
+.ps-item { position:relative; overflow:hidden; }
+.ps-item img { width:100%; height:100%; object-fit:cover; object-position:top center; transition:transform .6s ease; filter:saturate(.75) contrast(1.05); }
+.ps-item:hover img { transform:scale(1.07); filter:saturate(1) contrast(1.05); }
+.ps-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(8,8,9,.85) 0%, transparent 50%);
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding:28px 24px; opacity:0; transition:opacity .4s;
+}
+.ps-item:hover .ps-overlay { opacity:1; }
+.ps-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--neon); margin-bottom:6px; }
+.ps-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-style:italic; font-size:28px; text-transform:uppercase; color:var(--white); }
+
+/* ─── EXPERIENCE ─── */
+.exp-wrap { display:flex; flex-direction:column; gap:2px; }
+.exp-row {
+  background:var(--card); padding:42px 48px;
+  display:grid; grid-template-columns:180px 1fr 110px;
+  gap:40px; align-items:start;
+  border-left:3px solid transparent; transition:all .3s;
+  position:relative; overflow:hidden;
+}
+.exp-row::before { content:''; position:absolute; inset:0; background:linear-gradient(90deg,rgba(210,255,0,.03),transparent 60%); opacity:0; transition:opacity .3s; }
+.exp-row:hover { border-left-color:var(--neon); background:#1d1d1f; }
+.exp-row:hover::before { opacity:1; }
+.exp-co { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+.exp-role { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:28px; text-transform:uppercase; color:var(--white); letter-spacing:1px; }
+.exp-ul { list-style:none; display:flex; flex-direction:column; gap:11px; }
+.exp-ul li { font-size:14px; color:#666; line-height:1.55; padding-left:20px; position:relative; }
+.exp-ul li::before { content:'→'; position:absolute; left:0; color:var(--neon); font-size:11px; top:1px; }
+.exp-dur { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--neon); padding:6px 12px; border:1px solid rgba(210,255,0,.25); text-align:center; align-self:start; }
+
+/* ─── SKILLS ─── */
+.sk-sect { background:var(--darker); }
+.sk-grid { display:flex; flex-wrap:wrap; gap:10px; }
+.sk { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; padding:13px 22px; border:1px solid var(--border); color:var(--muted); transition:all .25s; cursor:default; position:relative; overflow:hidden; }
+.sk::before { content:''; position:absolute; inset:0; background:var(--neon); transform:translateY(100%); transition:transform .25s; }
+.sk:hover { color:var(--dark); border-color:var(--neon); }
+.sk:hover::before { transform:translateY(0); }
+.sk span { position:relative; z-index:1; }
+
+/* ─── PASSIONS FULL BLEED ─── */
+.passions-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; }
+.p-card { background:var(--card); padding:64px 52px; position:relative; overflow:hidden; transition:background .3s; }
+.p-card:hover { background:#1d1d1f; }
+.p-card::after { content:attr(data-e); position:absolute; right:24px; bottom:0; font-size:140px; opacity:.05; transition:all .5s; transform:rotate(-8deg); }
+.p-card:hover::after { opacity:.12; transform:rotate(0deg) scale(1.08); }
+.p-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--neon); margin-bottom:14px; }
+.p-t { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-style:italic; font-size:58px; text-transform:uppercase; color:var(--white); line-height:1; margin-bottom:14px; }
+.p-d { font-size:14px; color:#5a5a5d; line-height:1.65; max-width:300px; }
+
+/* ─── LIFESTYLE SECTION ─── */
+.life { background:var(--darker); border-top:1px solid var(--border); }
+.life-mosaic {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:320px 320px;
+  gap:2px;
+}
+.lm { position:relative; overflow:hidden; }
+.lm img { width:100%; height:100%; object-fit:cover; object-position:center; filter:saturate(.7) brightness(.9); transition:all .5s ease; }
+.lm:hover img { filter:saturate(1) brightness(1); transform:scale(1.05); }
+.lm-1 { grid-column:1/2; grid-row:1/3; }
+.lm-1 img { object-position:top center; }
+.lm-2 { grid-column:2/3; grid-row:1/2; }
+.lm-3 { grid-column:3/4; grid-row:1/2; }
+.lm-4 { grid-column:2/4; grid-row:2/3; }
+.lm-caption {
+  position:absolute; bottom:0; left:0; right:0;
+  padding:20px 22px;
+  background:linear-gradient(to top, rgba(8,8,9,.9) 0%, transparent 100%);
+  transform:translateY(100%); transition:transform .35s ease;
+}
+.lm:hover .lm-caption { transform:translateY(0); }
+.lm-cap-tag { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--neon); margin-bottom:4px; }
+.lm-cap-title { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; text-transform:uppercase; color:var(--white); }
+
+/* ─── PROFILE INFO ─── */
+.profile-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; }
+.p3-block { background:var(--card); padding:44px 38px; }
+.p3-title { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--neon); margin-bottom:26px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+.edu-i { padding:14px 0; border-bottom:1px solid #1c1c1e; }
+.edu-i:last-child { border-bottom:none; }
+.edu-deg { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; text-transform:uppercase; color:var(--white); margin-bottom:3px; }
+.edu-sub { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:2px; color:var(--muted); }
+.lang-r { display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #1c1c1e; }
+.lang-r:last-child { border-bottom:none; }
+.lang-n { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; text-transform:uppercase; color:var(--white); }
+.seg-row { display:flex; gap:3px; }
+.seg { width:20px; height:3px; background:#222; }
+.seg.on { background:var(--neon); }
+.ach-r { display:flex; gap:14px; padding:14px 0; border-bottom:1px solid #1c1c1e; }
+.ach-r:last-child { border-bottom:none; }
+.ach-ic { color:var(--neon); font-size:12px; flex-shrink:0; margin-top:2px; }
+.ach-tx { font-size:13px; color:#5a5a5d; line-height:1.5; }
+
+/* ─── CONTACT STRIP ─── */
+.ct-strip {
+  background:var(--neon); padding:72px 60px;
+  display:flex; justify-content:space-between; align-items:center;
+  gap:40px; flex-wrap:wrap;
+}
+.ct-strip h2 { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-style:italic; font-size:clamp(44px,7vw,90px); text-transform:uppercase; color:var(--dark); line-height:.9; }
+.ct-details { display:flex; flex-direction:column; gap:14px; text-align:right; }
+.ct-row { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:1px; color:rgba(0,0,0,.55); }
+
+/* ─── FOOTER ─── */
+footer { background:var(--darker); padding:26px 60px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid #141416; }
+.f-logo { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-style:italic; font-size:17px; text-transform:uppercase; color:var(--neon); letter-spacing:2px; }
+.f-copy { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:2px; color:var(--muted); }
+
+/* ─── REVEAL ─── */
+.r { opacity:0; transform:translateY(26px); transition:opacity .7s ease,transform .7s ease; }
+.r.in { opacity:1; transform:translateY(0); }
+
+/* ─── KEYFRAMES ─── */
+@keyframes up { from{opacity:0;transform:translateY(38px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fade { from{opacity:0} to{opacity:1} }
+@keyframes pulse { 0%,100%{opacity:.25} 50%{opacity:1} }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:960px){
+  nav{padding:18px 22px}
+  .nav-links{display:none}
+  .hero{grid-template-columns:1fr; min-height:100svh}
+  .hero-right{position:absolute;inset:0;opacity:.2}
+  .hero-left{padding:120px 24px 70px}
+  section{padding:64px 24px}
+  .about-grid,.passions-grid,.profile-3,.photo-strip,.life-mosaic{grid-template-columns:1fr}
+  .photo-strip,.life-mosaic{height:auto}
+  .ps-item,.lm{height:260px}
+  .lm-1,.lm-2,.lm-3,.lm-4{grid-column:auto;grid-row:auto}
+  .exp-row{grid-template-columns:1fr;gap:20px}
+  .ct-strip{flex-direction:column}
+  .ct-details{text-align:left}
+  footer{flex-direction:column;gap:10px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+<div id="blob"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">CGM</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#life">Life</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-giant">C</div>
+    <p class="hero-tag">Maharashtra, India &nbsp;·&nbsp; IT Professional &nbsp;·&nbsp; 2026</p>
+    <h1 class="hero-name">
+      Cristiano<br>
+      <span class="y">Ganpat<br>Messi</span>
+    </h1>
+    <p class="hero-desc">IT Support Specialist. Compounder. Cricketer. Dancer. Building a career on discipline, creativity, and relentless drive.</p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-neon">Get In Touch</a>
+      <a href="#experience" class="btn-ghost">View Experience</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="photo1.png" alt="Cristiano Ganpat Messi">
+  </div>
+  <div class="scroll-hint">
+    <div class="s-line"></div>
+    <span>Scroll</span>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="m-inner">
+    <span>IT Support</span><span class="dot">✦</span>
+    <span>Cricketer</span><span class="dot">✦</span>
+    <span>Dancer</span><span class="dot">✦</span>
+    <span>Maharashtra</span><span class="dot">✦</span>
+    <span>BTech</span><span class="dot">✦</span>
+    <span>Team Leader</span><span class="dot">✦</span>
+    <span>Problem Solver</span><span class="dot">✦</span>
+    <span>Adaptable</span><span class="dot">✦</span>
+    <span>IT Support</span><span class="dot">✦</span>
+    <span>Cricketer</span><span class="dot">✦</span>
+    <span>Dancer</span><span class="dot">✦</span>
+    <span>Maharashtra</span><span class="dot">✦</span>
+    <span>BTech</span><span class="dot">✦</span>
+    <span>Team Leader</span><span class="dot">✦</span>
+    <span>Problem Solver</span><span class="dot">✦</span>
+    <span>Adaptable</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- PHOTO STRIP -->
+<div class="photo-strip">
+  <div class="ps-item">
+    <img src="photo1.png" alt="Cristiano — Work">
+    <div class="ps-overlay">
+      <div class="ps-label">Mode 01</div>
+      <div class="ps-title">Professional</div>
+    </div>
+  </div>
+  <div class="ps-item">
+    <img src="photo2.png" alt="Cristiano — Formal" style="object-position:center top">
+    <div class="ps-overlay">
+      <div class="ps-label">Mode 02</div>
+      <div class="ps-title">Formal</div>
+    </div>
+  </div>
+  <div class="ps-item">
+    <img src="photo3.png" alt="Cristiano — Off Duty">
+    <div class="ps-overlay">
+      <div class="ps-label">Mode 03</div>
+      <div class="ps-title">Off Duty</div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="sec-hd r">
+    <span class="sec-n">01</span>
+    <h2 class="sec-t">About</h2>
+    <div class="sec-l"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-copy r">
+      <p>A <strong>dedicated and multi-talented professional</strong> seeking an opportunity in the IT sector as a Compounder (Support Role).</p>
+      <p>The same focus that drives performance on the cricket pitch and the dance floor translates into a professional mindset built on <strong>precision, adaptability, and relentless drive</strong>.</p>
+      <p>Whether it's managing system records or leading a team on the field — <strong>discipline is the constant</strong>.</p>
+    </div>
+    <div class="stats r">
+      <div class="stat"><div class="stat-n">2+</div><div class="stat-l">Years Experience</div></div>
+      <div class="stat"><div class="stat-n">5</div><div class="stat-l">Core Skills</div></div>
+      <div class="stat"><div class="stat-n">3</div><div class="stat-l">Languages</div></div>
+      <div class="stat"><div class="stat-n">∞</div><div class="stat-l">Drive & Ambition</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="sec-hd r">
+    <span class="sec-n">02</span>
+    <h2 class="sec-t">Experience</h2>
+    <div class="sec-l"></div>
+  </div>
+  <div class="exp-wrap">
+    <div class="exp-row r">
+      <div>
+        <div class="exp-co">IT Firm</div>
+        <div class="exp-role">Compounder /<br>Support Staff</div>
+      </div>
+      <ul class="exp-ul">
+        <li>Assisted technical teams in managing basic IT operations and day-to-day support tasks.</li>
+        <li>Maintained system records and ensured smooth workflow across all departments.</li>
+        <li>Provided backend support to developers and technicians on a daily basis.</li>
+        <li>Ensured timely completion of all assigned responsibilities and deliverables.</li>
+      </ul>
+      <div class="exp-dur">2+ YRS</div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="sk-sect" id="skills">
+  <div class="sec-hd r">
+    <span class="sec-n">03</span>
+    <h2 class="sec-t">Skills</h2>
+    <div class="sec-l"></div>
+  </div>
+  <div class="sk-grid r">
+    <div class="sk"><span>Basic IT Support</span></div>
+    <div class="sk"><span>Team Coordination</span></div>
+    <div class="sk"><span>Time Management</span></div>
+    <div class="sk"><span>Problem-Solving</span></div>
+    <div class="sk"><span>Adaptability</span></div>
+    <div class="sk"><span>System Records</span></div>
+    <div class="sk"><span>Workflow Management</span></div>
+    <div class="sk"><span>Backend Support</span></div>
+  </div>
+</section>
+
+<!-- PASSIONS -->
+<section>
+  <div class="sec-hd r">
+    <span class="sec-n">04</span>
+    <h2 class="sec-t">Off Track</h2>
+    <div class="sec-l"></div>
+  </div>
+  <div class="passions-grid">
+    <div class="p-card r" data-e="💃">
+      <div class="p-label">Passion No. 01</div>
+      <div class="p-t">Dance</div>
+      <div class="p-d">Skilled in freestyle and contemporary styles. Competed in multiple competitions, bringing expression and creativity to every floor.</div>
+    </div>
+    <div class="p-card r" data-e="🏏">
+      <div class="p-label">Passion No. 02</div>
+      <div class="p-t">Cricket</div>
+      <div class="p-d">Played at school and local levels — strong leadership, team chemistry, and the instincts that power professional excellence.</div>
+    </div>
+  </div>
+</section>
+
+<!-- LIFESTYLE MOSAIC -->
+<section class="life" id="life">
+  <div class="sec-hd r">
+    <span class="sec-n">05</span>
+    <h2 class="sec-t">The Life</h2>
+    <div class="sec-l"></div>
+  </div>
+  <div class="life-mosaic r">
+    <div class="lm lm-1">
+      <img src="photo3.png" alt="Off Duty">
+      <div class="lm-caption">
+        <div class="lm-cap-tag">Lifestyle</div>
+        <div class="lm-cap-title">Off Duty</div>
+      </div>
+    </div>
+    <div class="lm lm-2">
+      <img src="photo2.png" alt="Formal" style="object-position:top left">
+      <div class="lm-caption">
+        <div class="lm-cap-tag">Formal</div>
+        <div class="lm-cap-title">Black Tie</div>
+      </div>
+    </div>
+    <div class="lm lm-3">
+      <img src="photo2.png" alt="Active" style="object-position:top right">
+      <div class="lm-caption">
+        <div class="lm-cap-tag">Fitness</div>
+        <div class="lm-cap-title">Active</div>
+      </div>
+    </div>
+    <div class="lm lm-4">
+      <img src="photo1.png" alt="Work" style="object-position:center 20%">
+      <div class="lm-caption">
+        <div class="lm-cap-tag">Work Mode</div>
+        <div class="lm-cap-title">Professional</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section>
+  <div class="sec-hd r">
+    <span class="sec-n">06</span>
+    <h2 class="sec-t">Profile</h2>
+    <div class="sec-l"></div>
+  </div>
+  <div class="profile-3">
+    <div class="p3-block r">
+      <div class="p3-title">Education</div>
+      <div class="edu-i"><div class="edu-deg">BTech</div><div class="edu-sub">Pursuing / Completed</div></div>
+      <div class="edu-i"><div class="edu-deg">Higher Secondary</div><div class="edu-sub">Completed</div></div>
+    </div>
+    <div class="p3-block r">
+      <div class="p3-title">Languages</div>
+      <div class="lang-r"><span class="lang-n">English</span><div class="seg-row"><div class="seg on"></div><div class="seg on"></div><div class="seg on"></div><div class="seg on"></div><div class="seg"></div></div></div>
+      <div class="lang-r"><span class="lang-n">Hindi</span><div class="seg-row"><div class="seg on"></div><div class="seg on"></div><div class="seg on"></div><div class="seg on"></div><div class="seg on"></div></div></div>
+      <div class="lang-r"><span class="lang-n">Marathi</span><div class="seg-row"><div class="seg on"></div><div class="seg on"></div><div class="seg on"></div><div class="seg on"></div><div class="seg on"></div></div></div>
+    </div>
+    <div class="p3-block r">
+      <div class="p3-title">Achievements</div>
+      <div class="ach-r"><span class="ach-ic">★</span><span class="ach-tx">Competed in inter-level dance competitions — freestyle & contemporary.</span></div>
+      <div class="ach-r"><span class="ach-ic">★</span><span class="ach-tx">Represented local cricket team with leadership on the field.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<div class="ct-strip" id="contact">
+  <h2>Get In<br>Touch.</h2>
+  <div class="ct-details">
+    <div class="ct-row">+91-XXXXXXXXXX</div>
+    <div class="ct-row">cristiano.messi@email.com</div>
+    <div class="ct-row">Maharashtra, India</div>
+  </div>
+</div>
+
+<footer>
+  <div class="f-logo">Cristiano Ganpat Messi</div>
+  <div class="f-copy">© 2026 · All Rights Reserved</div>
+</footer>
+
+<script>
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-r');
+const blob = document.getElementById('blob');
+
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px';
+  blob.style.left = e.clientX + 'px'; blob.style.top = e.clientY + 'px';
+});
+
+document.querySelectorAll('a,.sk,.exp-row,.p-card,.stat,.ps-item,.lm').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.width='62px'; ring.style.height='62px'; ring.style.opacity='.85'; });
+  el.addEventListener('mouseleave', () => { ring.style.width='38px'; ring.style.height='38px'; ring.style.opacity='.45'; });
+});
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('in'), i * 85);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
